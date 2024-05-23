@@ -7,12 +7,12 @@ app.use(bodyParser.json());
 
 // Azure SQL Database connection configuration
 const dbConfig = {
-    user: 'your-username',
-    password: 'your-password',
-    server: 'your-server-name.database.windows.net',
-    database: 'your-database-name',
+    user: 'bkhadka',
+    password: '!QAZ1qaz@WSX2wsx',
+    server: 'myvdbserver.database.windows.net',
+    database: 'mydb',
     options: {
-        encrypt: true // Use encryption
+        encrypt: false // Don't Use encryption
     }
 };
 
