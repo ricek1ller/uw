@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Web App</title>
+</head>
+<body>
+    <h1>CRUD Web App</h1>
+    <form id="dataForm">
+        <input type="hidden" id="dataId" />
+        <label for="name">Name:</label>
+        <input type="text" id="name" required />
+        <label for="value">Value:</label>
+        <input type="text" id="value" required />
+        <button type="submit">Submit</button>
+    </form>
+    <div id="dataList"></div>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('dataId').value;
+            const name = document.getElementById('name').value;
+            const value = document.getElementById('value').value;
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/data/${id}` : '/data';
+
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, value })
+            });
+            alert(await response.text());
+            document.getElementById('dataForm').reset();
+            fetchData();
+        });
+
+        async function fetchData() {
+            const response = await fetch('/data');
+            const data = await response.json();
+            const dataList = document.getElementById('dataList');
+            dataList.innerHTML = data.map(d => `
+                <div>
+                    <span>${d.name}: ${d.value}</span>
+                    <button onclick="editData(${d.id}, '${d.name}', '${d.value}')">Edit</button>
+                    <button onclick="deleteData(${d.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        async function editData(id, name, value) {
+            document.getElementById('dataId').value = id;
+            document.getElementById('name').value = name;
+            document.getElementById('value').value = value;
+        }
+
+        async function deleteData(id) {
+            const response = await fetch(`/data/${id}`, { method: 'DELETE' });
+            alert(await response.text());
+            fetchData();
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
